@@ -1,11 +1,9 @@
 # BS-clock
 advancing epigenetic age prediction with high-resolution bisulfite sequencing data
 
-# individual prediction
+## 1. prepare data
 
-## prepare data
-
-### blood
+## 1.1 blood samples
 
 ```python
 # 读取meta数据
@@ -78,11 +76,13 @@ for corr in corr_list:
     data.to_csv(f'train_data4/merge_{tissue}_{corr}.csv')
 ```
 
-### three tissue
+## Brain、Lung and Skin samples
 
+```
 # 读取meta数据
 os.chdir('G:\\Methylation\\model\\')
 meta = pd.read_csv('meta_tissue.csv')
+
 # 只保留正常样本
 # meta = meta.loc[meta['disease state' == 'Normal',:]]
 
@@ -92,8 +92,7 @@ for tissue in tissue_list:
     meta_tissue = meta.loc[meta['tissue'] == tissue,:]
     files = meta_tissue['SRA'].reset_index(drop=True)
     
-```python
-for i in range(len(files)):
+    for i in range(len(files)):
     print(f"the {i}-th sample is {files[i]}")
     # 读取数据文件
     data = pd.read_csv(f'../result_tissue/{files[i]}.txt',sep = '\t',header=None)
@@ -156,7 +155,7 @@ for corr in corr_list:
     data.to_csv(f'train_data4/merge_{tissue}_{corr}.csv')
 ```
 
-## select feature
+## 2. select feature
 
 ```python
 def bootstrap(bootstrap_df,n):
@@ -262,7 +261,9 @@ for tissue in tissue_list:
     model_data.to_csv(f'train_data4/bootstrap_{tissue}_{corr}.csv') 
 ```
 
-## train model
+## 3. train model
+
+### 3.1 without disease features
 
 ```python
 # 定义参数搜索范围
@@ -345,7 +346,7 @@ for tissue in tissue_list:
     print(f'model_corr of {tissue} is:{model_corr}')
 ```
 
-## train model——add disease feature
+### 3.2 with disease features
 
 ```python
 # add disease feature
