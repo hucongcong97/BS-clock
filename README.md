@@ -76,7 +76,7 @@ for corr in corr_list:
     data.to_csv(f'train_data4/merge_{tissue}_{corr}.csv')
 ```
 
-## Brain、Lung and Skin samples
+## 1.2 Brain、Lung and Skin samples
 
 ```
 # 读取meta数据
