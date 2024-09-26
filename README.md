@@ -79,7 +79,7 @@ for corr in corr_list:
 ## 1.2 Brain、Lung and Skin samples
 
 ```
-# # Set the working directory
+# Set the working directory
 os.chdir('G:\\Methylation\\model\\')
 meta = pd.read_csv('meta_tissue.csv')
 
