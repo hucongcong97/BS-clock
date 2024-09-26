@@ -15111,7 +15111,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#引入库</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Import library</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -15143,7 +15143,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p><strong>导出Normal和年龄相关性的位点数据</strong></p>
+<p><strong>Export site data related to age in normal sample</strong></p>
 
 </div>
 </div>
@@ -15162,7 +15162,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../../train_data/bootstrap_Blood_0.2.csv&#39;</span><span class="p">,</span><span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">merge</span> <span class="o">=</span> <span class="n">merge</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
 
-<span class="c1"># 将merge data匹配age信息</span>
+<span class="c1"># Match age information to merge data</span>
 <span class="n">merge_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">merge</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">meta</span><span class="p">[[</span><span class="s2">&quot;SRA&quot;</span><span class="p">,</span><span class="s2">&quot;age&quot;</span><span class="p">,</span><span class="s2">&quot;disease state&quot;</span><span class="p">]],</span><span class="n">left_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">right_on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;SRA&quot;</span><span class="p">])</span>
 <span class="n">merge_data</span> <span class="o">=</span> <span class="n">merge_data</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;SRA&quot;</span><span class="p">)</span>
 
@@ -15170,14 +15170,14 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 
 <span class="n">merge_check</span> <span class="o">=</span> <span class="n">merge_data2</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">0</span><span class="p">:</span><span class="n">merge</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span>
 
-<span class="c1"># 计算单个cpgsite与age的相关性</span>
+<span class="c1"># Calculate correlation between single cpgsite and age</span>
 <span class="n">merge</span><span class="p">[</span><span class="s1">&#39;corr&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">corrcoef</span><span class="p">(</span><span class="n">merge_data2</span><span class="o">.</span><span class="n">iloc</span><span class="p">[(</span><span class="o">~</span><span class="n">merge_check</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="n">i</span><span class="p">])</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">merge_data2</span><span class="o">.</span><span class="n">iloc</span><span class="p">[(</span><span class="o">~</span><span class="n">merge_check</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="n">i</span><span class="p">])</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">merge_data2</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mi">2</span><span class="p">)]</span>
 
-<span class="c1"># 将corr列从高到低排序</span>
+<span class="c1"># Sort corr column from high to low</span>
 <span class="n">merge1</span> <span class="o">=</span> <span class="n">merge</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;corr&#39;</span><span class="p">,</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="c1"># 删除corr为NA的行</span>
+<span class="c1"># Delete rows with corr as NA</span>
 <span class="n">merge2</span> <span class="o">=</span> <span class="n">merge1</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="o">~</span><span class="n">merge1</span><span class="p">[</span><span class="s1">&#39;corr&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">(),:]</span>
-<span class="c1"># 保存数据</span>
+<span class="c1"># save data</span>
 <span class="n">nums</span> <span class="o">=</span> <span class="p">[</span><span class="mi">500</span><span class="p">,</span><span class="mi">1000</span><span class="p">,</span><span class="mi">2000</span><span class="p">,</span><span class="mi">3000</span><span class="p">]</span>
 <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">nums</span><span class="p">:</span>
     <span class="n">merge2</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">num</span><span class="p">,</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;normal_positive_</span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s1">.csv&#39;</span><span class="p">)</span>
@@ -15196,7 +15196,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p><strong>导出Disease和年龄相关性的位点数据</strong></p>
+<p><strong>Export site data related to age in disease sample</strong></p>
 
 </div>
 </div>
@@ -15215,7 +15215,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../../train_data/bootstrap_Blood_0.2.csv&#39;</span><span class="p">,</span><span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">merge</span> <span class="o">=</span> <span class="n">merge</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
 
-<span class="c1"># 将merge data匹配age信息</span>
+<span class="c1"># Match age information to merge data</span>
 <span class="n">merge_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">merge</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">meta</span><span class="p">[[</span><span class="s2">&quot;SRA&quot;</span><span class="p">,</span><span class="s2">&quot;age&quot;</span><span class="p">,</span><span class="s2">&quot;disease state&quot;</span><span class="p">]],</span><span class="n">left_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">right_on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;SRA&quot;</span><span class="p">])</span>
 <span class="n">merge_data</span> <span class="o">=</span> <span class="n">merge_data</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;SRA&quot;</span><span class="p">)</span>
 
@@ -15223,14 +15223,14 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 
 <span class="n">merge_check</span> <span class="o">=</span> <span class="n">merge_data2</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">0</span><span class="p">:</span><span class="n">merge</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span>
 
-<span class="c1"># 计算单个cpgsite与age的相关性</span>
+<span class="c1"># Calculate correlation between single cpgsite and age</span>
 <span class="n">merge</span><span class="p">[</span><span class="s1">&#39;corr&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">corrcoef</span><span class="p">(</span><span class="n">merge_data2</span><span class="o">.</span><span class="n">iloc</span><span class="p">[(</span><span class="o">~</span><span class="n">merge_check</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="n">i</span><span class="p">])</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">merge_data2</span><span class="o">.</span><span class="n">iloc</span><span class="p">[(</span><span class="o">~</span><span class="n">merge_check</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="n">i</span><span class="p">])</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">merge_data2</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mi">2</span><span class="p">)]</span>
 
-<span class="c1"># 将corr列从高到低排序</span>
+<span class="c1"># Sort corr column from high to low</span>
 <span class="n">merge1</span> <span class="o">=</span> <span class="n">merge</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;corr&#39;</span><span class="p">,</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="c1"># 删除corr为NA的行</span>
+<span class="c1"># Delete rows with corr as NA</span>
 <span class="n">merge2</span> <span class="o">=</span> <span class="n">merge1</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="o">~</span><span class="n">merge1</span><span class="p">[</span><span class="s1">&#39;corr&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">(),:]</span>
-<span class="c1"># 保存数据</span>
+<span class="c1"># save data</span>
 <span class="n">nums</span> <span class="o">=</span> <span class="p">[</span><span class="mi">500</span><span class="p">,</span><span class="mi">1000</span><span class="p">,</span><span class="mi">2000</span><span class="p">,</span><span class="mi">3000</span><span class="p">]</span>
 <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">nums</span><span class="p">:</span>
     <span class="n">merge2</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">num</span><span class="p">,</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;disease_positive_</span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s1">.csv&#39;</span><span class="p">)</span>
@@ -15260,17 +15260,33 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>将上述得到的数据输入到<a href="http://great.stanford.edu/public/html/">GREAT</a></p>
+<p>Enter the above data into <a href="http://great.stanford.edu/public/html/">GREAT</a></p>
 <ul>
-<li>选择版本<strong>GREAT version 4.0.4</strong>；</li>
-<li>Species Assembly选择<strong>Human: GRCh37 (UCSC hg19, Feb. 2009)</strong>；</li>
-<li>将Test regions选择<strong>BED data</strong>，将染色体以及起始和终止的数据粘贴进去；</li>
-<li>点击<strong>Submit</strong>，下载相应的结果。</li>
+<li>Select version <strong>GREAT version 4.0.4</strong>;</li>
+<li>Select <strong>Human: GRCh37 (UCSC hg19, Feb. 2009)</strong> for Species Assembly;</li>
+<li>Select <strong>BED data</strong> for Test regions, and paste the chromosome and start and end data into it;</li>
+<li>Click <strong>Submit</strong> to download the corresponding results.</li>
 </ul>
 
 </div>
 </div>
 </div>
+</div><div id="cell-id=0f307590" class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
 </div>
 </body>
 

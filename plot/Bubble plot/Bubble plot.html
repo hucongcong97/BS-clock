@@ -15120,7 +15120,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <span class="c1"># BiocManager::install(&quot;org.Hs.eg.db&quot;) </span>
 <span class="c1"># BiocManager::install(&quot;ReactomePA&quot;)</span>
 
-<span class="c1"># 导入包</span>
+<span class="c1"># Import package</span>
 <span class="nf">library</span><span class="p">(</span><span class="n">GenomicFeatures</span><span class="p">)</span>
 <span class="nf">library</span><span class="p">(</span><span class="n">GenomicRanges</span><span class="p">)</span>
 <span class="nf">library</span><span class="p">(</span><span class="n">TxDb.Hsapiens.UCSC.hg19.knownGene</span><span class="p">)</span>
@@ -15157,7 +15157,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-r"><pre><span></span><span class="c1">#-------------------------------------------------------------------------------</span>
-<span class="c1"># 根据曼哈顿数据匹配基因并进行GO富集分析</span>
+<span class="c1"># Match genes according to Manhattan data and perform GO enrichment analysis</span>
 <span class="c1">#-------------------------------------------------------------------------------</span>
 <span class="n">tissue_list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">&#39;Blood&#39;</span><span class="p">,</span><span class="s">&#39;Brain&#39;</span><span class="p">,</span><span class="s">&#39;Lung&#39;</span><span class="p">,</span><span class="s">&#39;Skin&#39;</span><span class="p">)</span><span class="c1"># c(&#39;Blood&#39;,&#39;Brain&#39;,&#39;Lung&#39;,&#39;Skin&#39;)</span>
 <span class="nf">for</span><span class="p">(</span><span class="n">tissue</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="n">tissue_list</span><span class="p">){</span>
@@ -15167,18 +15167,18 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <span class="w">  </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">data</span><span class="p">[</span><span class="nf">abs</span><span class="p">(</span><span class="n">data</span><span class="o">$</span><span class="n">Spearman.Correlation</span><span class="p">)</span><span class="o">&gt;</span><span class="m">0.2</span><span class="p">,]</span>
 <span class="w">  </span><span class="c1"># &#39;Blood&#39; 1e-6; &#39;Brain&#39; 5e-2; &#39;Lung&#39; 1e-2; &#39;Skin&#39; 1e-3</span>
 <span class="w">  </span>
-<span class="w">  </span><span class="c1"># 将数据转换为GRanges对象</span>
+<span class="w">  </span><span class="c1"># Convert data into GRanges object</span>
 <span class="w">  </span><span class="n">gr</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">GRanges</span><span class="p">(</span><span class="n">seqnames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">Rle</span><span class="p">(</span><span class="n">data</span><span class="o">$</span><span class="n">Chr</span><span class="p">),</span>
 <span class="w">                </span><span class="n">ranges</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">IRanges</span><span class="p">(</span><span class="n">start</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">data</span><span class="o">$</span><span class="n">Start</span><span class="p">,</span><span class="w"> </span><span class="n">end</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">data</span><span class="o">$</span><span class="n">End</span><span class="p">))</span>
 <span class="w">  </span>
-<span class="w">  </span><span class="c1"># 加载基因注释数据库</span>
+<span class="w">  </span><span class="c1"># Load gene annotation database</span>
 <span class="w">  </span><span class="n">txdb</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">TxDb.Hsapiens.UCSC.hg19.knownGene</span>
 <span class="w">  </span>
-<span class="w">  </span><span class="c1"># 进行基因注释</span>
+<span class="w">  </span><span class="c1"># Perform gene annotation</span>
 <span class="w">  </span><span class="n">peakAnno</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">annotatePeak</span><span class="p">(</span><span class="n">gr</span><span class="p">,</span><span class="w"> </span><span class="n">tssRegion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">-3000</span><span class="p">,</span><span class="w"> </span><span class="m">3000</span><span class="p">),</span><span class="w"> </span><span class="n">TxDb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">txdb</span><span class="p">,</span><span class="w"> </span>
 <span class="w">                           </span><span class="n">annoDb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;org.Hs.eg.db&quot;</span><span class="p">,</span><span class="n">assignGenomicAnnotation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span><span class="p">)</span>
 <span class="w">  </span>
-<span class="w">  </span><span class="c1"># 提取注释结果中的基因ID</span>
+<span class="w">  </span><span class="c1"># Extract gene ID from annotation results</span>
 <span class="w">  </span><span class="n">anno_df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">as.data.frame</span><span class="p">(</span><span class="n">peakAnno</span><span class="p">)</span>
 <span class="w">  </span><span class="nf">colnames</span><span class="p">(</span><span class="n">anno_df</span><span class="p">)[</span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">&#39;Chr&#39;</span><span class="p">,</span><span class="s">&#39;Start&#39;</span><span class="p">,</span><span class="s">&#39;End&#39;</span><span class="p">)</span>
 <span class="w">  </span>
@@ -15196,7 +15196,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <span class="w">  </span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">merged_df</span><span class="p">[</span><span class="n">merged_df</span><span class="o">$</span><span class="n">Spearman.P.value</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">0.05</span><span class="p">,]</span>
 <span class="w">  </span><span class="n">gene_list</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">unique</span><span class="p">(</span><span class="n">anno_df</span><span class="o">$</span><span class="n">geneId</span><span class="p">)</span>
 
-<span class="w">  </span><span class="c1"># 进行GO富集分析</span>
+<span class="w">  </span><span class="c1"># Perform GO enrichment analysis</span>
 <span class="w">  </span><span class="n">go_enrich</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">enrichGO</span><span class="p">(</span><span class="n">gene</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="n">gene_list</span><span class="p">,</span>
 <span class="w">                        </span><span class="n">OrgDb</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="n">org.Hs.eg.db</span><span class="p">,</span>
 <span class="w">                        </span><span class="n">keyType</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;ENTREZID&quot;</span><span class="p">,</span>
@@ -15213,45 +15213,8 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <span class="w">    </span><span class="n">num</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">20</span>
 <span class="w">  </span><span class="p">}</span>
 
-<span class="w">  </span><span class="c1"># # 气泡图</span>
-<span class="w">  </span><span class="c1"># pdf(file = paste0(&#39;GO_dotplot_manhattan_&#39;,tissue,&#39;.pdf&#39;),width = 8,height = 5)</span>
-<span class="w">  </span><span class="c1"># print(dotplot(go_enrich, showCategory=num) + ggtitle(&quot;GO Enrichment Analysis&quot;))</span>
-<span class="w">  </span><span class="c1"># dev.off()</span>
-<span class="w">  </span><span class="c1"># </span>
-<span class="w">  </span><span class="c1"># # 条形图</span>
-<span class="w">  </span><span class="c1"># pdf(file = paste0(&#39;GO_barplot_manhattan_&#39;,tissue,&#39;.pdf&#39;),width = 8,height = 5)</span>
-<span class="w">  </span><span class="c1"># print(barplot(go_enrich, showCategory=num) + ggtitle(&quot;GO Enrichment Analysis&quot;))</span>
-<span class="w">  </span><span class="c1"># dev.off()</span>
-<span class="w">  </span>
-<span class="w">  </span><span class="c1"># # 进行KEGG通路富集分析</span>
-<span class="w">  </span><span class="c1"># kegg_enrich &lt;- enrichKEGG(gene         = gene_list,</span>
-<span class="w">  </span><span class="c1">#                           organism     = &#39;hsa&#39;,</span>
-<span class="w">  </span><span class="c1">#                           pvalueCutoff = 0.05,</span>
-<span class="w">  </span><span class="c1">#                           use_internal_data = TRUE)</span>
-<span class="w">  </span><span class="c1"># record = dim(data.frame(kegg_enrich))[1]</span>
-<span class="w">  </span><span class="c1"># print(paste0(&#39;KEGG result of &#39;,tissue,&#39; is &#39;,record))</span>
-<span class="w">  </span><span class="c1"># </span>
-<span class="w">  </span><span class="c1"># if((record &gt; 0) &amp; (record &lt; 20)){</span>
-<span class="w">  </span><span class="c1">#   num = record</span>
-<span class="w">  </span><span class="c1"># }else{</span>
-<span class="w">  </span><span class="c1">#   num = 20</span>
-<span class="w">  </span><span class="c1"># }</span>
-<span class="w">  </span><span class="c1"># # 气泡图</span>
-<span class="w">  </span><span class="c1"># pdf(file = paste0(&#39;KEGG_dotplot_manhattan_&#39;,tissue,&#39;.pdf&#39;),width = 8,height = 5)</span>
-<span class="w">  </span><span class="c1"># dotplot(kegg_enrich, showCategory=num) + ggtitle(&quot;KEGG Pathway Enrichment Analysis&quot;)</span>
-<span class="w">  </span><span class="c1"># dev.off()</span>
-<span class="w">  </span><span class="c1"># </span>
-<span class="w">  </span><span class="c1"># # 条形图</span>
-<span class="w">  </span><span class="c1"># pdf(file = paste0(&#39;KEGG_barplot_manhattan_&#39;,tissue,&#39;.pdf&#39;),width = 8,height = 5)</span>
-<span class="w">  </span><span class="c1"># barplot(kegg_enrich, showCategory=num) + ggtitle(&quot;KEGG Pathway Enrichment Analysis&quot;)</span>
-<span class="w">  </span><span class="c1"># dev.off()</span>
-<span class="w">  </span>
-<span class="w">  </span>
-<span class="w">  </span><span class="c1"># 保存GO分析结果</span>
+<span class="w">  </span><span class="c1"># Save GO analysis results</span>
 <span class="w">  </span><span class="nf">write.csv</span><span class="p">(</span><span class="nf">as.data.frame</span><span class="p">(</span><span class="n">go_enrich</span><span class="p">),</span><span class="w"> </span><span class="n">file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">paste0</span><span class="p">(</span><span class="s">&quot;go_enrichment_results_manhattan_&quot;</span><span class="p">,</span><span class="n">tissue</span><span class="p">,</span><span class="s">&quot;.csv&quot;</span><span class="p">),</span><span class="w"> </span><span class="n">row.names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span><span class="p">)</span>
-<span class="w">  </span>
-<span class="w">  </span><span class="c1"># # 保存KEGG分析结果</span>
-<span class="w">  </span><span class="c1"># write.csv(as.data.frame(kegg_enrich), file = paste0(&quot;kegg_enrichment_results_manhattan_&quot;,tissue,&quot;.csv&quot;), row.names = FALSE)</span>
 <span class="p">}</span>
 </pre></div>
 
@@ -15305,7 +15268,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <span class="nf">for</span><span class="p">(</span><span class="n">tissue</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="n">tissue_list</span><span class="p">){</span>
 <span class="w">    </span><span class="nf">print</span><span class="p">(</span><span class="n">tissue</span><span class="p">)</span>
 <span class="w">    </span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">read.csv</span><span class="p">(</span><span class="nf">paste0</span><span class="p">(</span><span class="s">&#39;go_enrichment_results_manhattan_&#39;</span><span class="p">,</span><span class="n">tissue</span><span class="p">,</span><span class="s">&#39;_select.csv&#39;</span><span class="p">))</span>
-<span class="w">    </span><span class="c1"># 将GeneRatio列转换为数值</span>
+<span class="w">    </span><span class="c1"># Convert GeneRatio column into numeric value</span>
 <span class="w">    </span><span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">df</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">separate</span><span class="p">(</span><span class="n">GeneRatio</span><span class="p">,</span><span class="w"> </span><span class="n">into</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;num&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;denom&quot;</span><span class="p">),</span><span class="w"> </span><span class="n">sep</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">mutate</span><span class="p">(</span><span class="n">GeneRatio</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">as.numeric</span><span class="p">(</span><span class="n">num</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nf">as.numeric</span><span class="p">(</span><span class="n">denom</span><span class="p">))</span>
 <span class="w">    </span>
 <span class="w">    </span><span class="nf">if</span><span class="p">(</span><span class="nf">dim</span><span class="p">(</span><span class="n">df</span><span class="p">)[</span><span class="m">1</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">10</span><span class="p">){</span>

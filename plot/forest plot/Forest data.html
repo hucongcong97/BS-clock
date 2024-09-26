@@ -15110,7 +15110,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>利用LOOCV策略为每一个样本训练一个弹性网回归模型，并保存特征的系数，得到行为特征，列为每个弹性网模型得到的系数，以此计算2.5分位数以及97.5分位数</p>
+<p>Use LOOCV strategy to train an Elastic Net Regression model for each sample, save the coefficient of the feature, obtain the behavioral feature, and list it as the coefficient obtained by each Elastic Net model, so as to calculate the 2.5 quantile and 97.5 quantile.</p>
 
 </div>
 </div>
@@ -15123,7 +15123,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># 定义参数搜索范围</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Define parameter search range</span>
 <span class="n">alpha_range</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">50</span><span class="p">]</span>
 <span class="n">l1_ratio_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">)</span>
 
@@ -15133,9 +15133,9 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
     <span class="n">model_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;../../train_data/bootstrap_</span><span class="si">{</span><span class="n">tissue</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">corr</span><span class="si">}</span><span class="s1">_add.csv&#39;</span><span class="p">,</span><span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
     <span class="n">loo</span> <span class="o">=</span> <span class="n">LeaveOneOut</span><span class="p">()</span>
-    <span class="c1"># 存储预测的年龄</span>
+    <span class="c1"># Store predicted age</span>
     <span class="n">age_pred_list</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="c1"># 使用留一法分割数据集</span>
+    <span class="c1"># Use leave-one-out method to split dataset</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Now is running LOOCV&#39;</span><span class="p">)</span>
     <span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
     <span class="n">coef</span> <span class="o">=</span> <span class="p">[]</span>
@@ -15149,34 +15149,34 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
         <span class="n">best_l1_ratio</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">best_mean_mse</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>
 
-        <span class="c1"># K 折交叉验证选择最优参数</span>
+        <span class="c1"># Select optimal parameters by K-fold cross validation</span>
         <span class="k">for</span> <span class="n">alpha</span> <span class="ow">in</span> <span class="n">alpha_range</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">l1_ratio</span> <span class="ow">in</span> <span class="n">l1_ratio_range</span><span class="p">:</span>
-                <span class="c1"># 定义 K 折交叉验证</span>
+                <span class="c1"># Define K-fold cross validation</span>
                 <span class="n">k_folds</span> <span class="o">=</span> <span class="n">KFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">2024</span><span class="p">)</span>
 
-                <span class="c1"># 存储每次交叉验证的均方误差</span>
+                <span class="c1"># Store mean square error of each cross validation</span>
                 <span class="n">mean_mse_list</span> <span class="o">=</span> <span class="p">[]</span>
-                <span class="c1"># 使用 K 折交叉验证训练模型并进行评估</span>
+                <span class="c1"># Train model and evaluate using K-fold cross validation</span>
                 <span class="k">for</span> <span class="n">train_index</span><span class="p">,</span> <span class="n">test_index</span> <span class="ow">in</span> <span class="n">k_folds</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">train_x</span><span class="p">):</span>
                     <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span> <span class="o">=</span> <span class="n">train_x</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">train_index</span><span class="p">],</span> <span class="n">train_x</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">test_index</span><span class="p">]</span>
                     <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_y</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">train_index</span><span class="p">],</span> <span class="n">train_y</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">test_index</span><span class="p">]</span>
 
-                    <span class="c1"># 创建并训练模型</span>
+                    <span class="c1"># Create and train model</span>
                     <span class="n">model</span> <span class="o">=</span> <span class="n">ElasticNet</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">l1_ratio</span><span class="o">=</span><span class="n">l1_ratio</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">2024</span><span class="p">)</span>
                     <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
 
-                    <span class="c1"># 在测试集上进行预测</span>
+                    <span class="c1"># Predict on test set</span>
                     <span class="n">y_pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
 
-                    <span class="c1"># 计算均方误差</span>
+                    <span class="c1"># Calculate mean square error</span>
                     <span class="n">mse</span> <span class="o">=</span> <span class="n">mean_squared_error</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
                     <span class="n">mean_mse_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mse</span><span class="p">)</span>
 
-                <span class="c1"># 计算交叉验证均方误差的平均值</span>
+                <span class="c1"># Calculate average of cross validation mean square error</span>
                 <span class="n">mean_mse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">mean_mse_list</span><span class="p">)</span>
 
-                <span class="c1"># 更新最佳参数和最小均方误差</span>
+                <span class="c1"># Update optimal parameter and minimum mean square error</span>
                 <span class="k">if</span> <span class="n">mean_mse</span> <span class="o">&lt;</span> <span class="n">best_mean_mse</span><span class="p">:</span>
                     <span class="n">best_mean_mse</span> <span class="o">=</span> <span class="n">mean_mse</span>
                     <span class="n">best_alpha</span> <span class="o">=</span> <span class="n">alpha</span>
@@ -15184,10 +15184,10 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 
 <span class="c1">#                     print(f&quot;alpha = {round(alpha, 2)}, l1_ratio = {round(l1_ratio, 3)}, mean MSE = {round(mean_mse, 3)}&quot;)</span>
 
-        <span class="c1"># 输出最佳参数</span>
+        <span class="c1"># Output optimal parameter</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Best alpha: </span><span class="si">{</span><span class="n">best_alpha</span><span class="si">}</span><span class="s2">, Best l1_ratio: </span><span class="si">{</span><span class="n">best_l1_ratio</span><span class="si">}</span><span class="s2">, Best mean MSE: </span><span class="si">{</span><span class="n">best_mean_mse</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-        <span class="c1"># 留一法预测年龄</span>
+        <span class="c1"># Predict age by leave-one-out method</span>
     <span class="c1">#     best_alpha = 0.1</span>
     <span class="c1">#     best_l1_ratio = 0.4</span>
 
@@ -15197,7 +15197,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
     
     <span class="n">coef</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">coef</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
 
-    <span class="c1"># 计算95%置信区间</span>
+    <span class="c1"># Calculate 95% confidence interval</span>
     <span class="n">ci_lower</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">coef</span><span class="p">,</span><span class="mf">2.5</span><span class="p">,</span><span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
     <span class="n">ci_upper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">coef</span><span class="p">,</span><span class="mf">97.5</span><span class="p">,</span><span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
 

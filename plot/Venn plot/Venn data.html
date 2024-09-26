@@ -15111,7 +15111,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#引入库</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># import library</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -15134,25 +15134,25 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">tissue_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Blood&#39;</span><span class="p">,</span><span class="s1">&#39;Brain&#39;</span><span class="p">,</span><span class="s1">&#39;Lung&#39;</span><span class="p">,</span><span class="s1">&#39;Skin&#39;</span><span class="p">]</span>
-<span class="c1"># 批量读取数据</span>
+<span class="c1"># Read data in batches</span>
 <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">tissue</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tissue_list</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">tissue</span><span class="p">)</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;F:/Methylation/model/train_data4/bootstrap_</span><span class="si">{</span><span class="n">tissue</span><span class="si">}</span><span class="s1">_0.2.csv&#39;</span><span class="p">,</span><span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="nb">globals</span><span class="p">()[</span><span class="s2">&quot;df&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span> <span class="o">=</span> <span class="n">df</span>
     
-<span class="c1"># 求四个数据location编号的并集</span>
+<span class="c1"># Find the union of the four data location numbers</span>
 <span class="n">loc</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">df1</span><span class="o">.</span><span class="n">columns</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">df2</span><span class="o">.</span><span class="n">columns</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()))</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">df3</span><span class="o">.</span><span class="n">columns</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()))</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">df4</span><span class="o">.</span><span class="n">columns</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())))</span>
 
-<span class="c1"># 创建数据框</span>
+<span class="c1"># Create a data frame</span>
 <span class="n">merge</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">loc</span><span class="p">),</span><span class="mi">4</span><span class="p">)),</span><span class="n">columns</span><span class="o">=</span><span class="n">tissue_list</span><span class="p">)</span>
 <span class="n">merge</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">loc</span>
-<span class="c1"># 将每个数据对应索引的数值赋为1</span>
+<span class="c1"># Assign the value of each data corresponding index to 1</span>
 <span class="n">merge</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df1</span><span class="o">.</span><span class="n">columns</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="s1">&#39;Blood&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="n">merge</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df2</span><span class="o">.</span><span class="n">columns</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="s1">&#39;Brain&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="n">merge</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df3</span><span class="o">.</span><span class="n">columns</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="s1">&#39;Lung&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="n">merge</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df4</span><span class="o">.</span><span class="n">columns</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="s1">&#39;Skin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="c1"># 保存数据</span>
+<span class="c1"># save data</span>
 <span class="n">merge</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;F:/Methylation/model/train_data4/plot_data/Venn plot/Venn_data.csv&#39;</span><span class="p">)</span>
 </pre></div>
 

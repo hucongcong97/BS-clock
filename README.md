@@ -6,25 +6,25 @@ advancing epigenetic age prediction with high-resolution bisulfite sequencing da
 ## 1.1 blood samples
 
 ```python
-# 读取meta数据
+# Set the working directory
 os.chdir('G:\\Methylation\\model\\')
 meta = pd.read_csv('meta.csv')
-# 只保留正常样本
+# Only keep normal samples
 # meta = meta.loc[meta['disease state' == 'Normal',:]]
 files = meta['SRA']
 tissue = 'Blood'
 for i in range(len(files)): 
     print(f"the {i}-th sample is {files[i]}")
-    # 读取数据文件
+    # read data
     data = pd.read_csv(f'../result_new/{files[i]}.txt',sep = '\t',header=None)
     data.columns = ['Chr','Start','End','methylation-level','methylated Cs','unmethylated Cs','Strand']
-    # 根据nreads筛选cpg
+    # Filter CpGs based on nreads
     data = data.loc[(data['methylated Cs']+data['unmethylated Cs'])>50,:]
-    # 计算甲基化水平
+    # Calculate mean methylation level
     data['methylation-level'] = data['methylation-level']/100
-    # 提取前四列
+    # Extract the first four columns
     data = data.iloc[:,[0,1,2,3]]
-    # 根据前三列对第四列求均值
+    # Calculate the average of the fourth column based on the first three columns
     data = data.groupby(['Chr','Start','End'])['methylation-level'].mean().reset_index()
     print(f'\tThe shape of {files[i]} is: {data.shape}')
     
@@ -32,42 +32,42 @@ for i in range(len(files)):
         merge = data
     else:
         merge = pd.merge(merge, data, how='outer',on=['Chr','Start','End'],suffixes=(f'_x{i}',f'_y{i}'))
-        # 删除重复行
+        # Delete duplicate rows
         # merge = merge.drop_duplicates()
-        # 删除含有NaN的行
+        # Delete rows containing NaN
         # merge.dropna(axis = 0,how = 'any',inplace=True)
         print(f'\t\tThe shape of merged data is: {merge.shape}')
 
-# 设置列名
+# Set column names
 merge.columns = ['Chr','Start','End']+files.tolist()
-# 删除NA值比例超过50%的行
+# Delete rows with NA value ratio exceeding 50%
 na_count = merge.isna().sum(axis = 1)
 na_ratio = na_count/(len(merge.columns)-3)
 merge = merge[na_ratio <= 0.6]
 print(f'**The shape of filtered merge is: {merge.shape}**')
-# 保存数据
+# Save data
 merge.to_csv(f'train_data4/merge_{tissue}_withchr.csv')
 merge = merge.iloc[:,3:]
 
-# 将merge data匹配age信息
+# Match merge data to age information
 merge_data = pd.merge(merge.T,meta[["SRA","age"]],left_index=True,right_on=["SRA"])
 merge_data = merge_data.set_index("SRA")
 merge_data.to_csv(f'train_data4/merge_{tissue}_withage.csv')
 
-# 检查是否有np.nan值
+# Check for np.nan values
 merge_check = merge.T.isnull()
 
-# 计算单个cpgsite与age的相关性
+# Calculate the correlation between single CpG site and age
 merge['corr'] = [np.corrcoef(merge_data.iloc[(~merge_check.iloc[:,i]).tolist(),i], merge_data.iloc[(~merge_check.iloc[:,i]).tolist(),-1])[0,1] for i in range(merge_data.shape[1]-1)]
 
 corr_list = [0.2,0.3,0.4]
 for corr in corr_list:
     data = merge[abs(merge['corr'])>corr]
     print(f'correlation threshold == {corr},the shape of data is:{data.shape}')
-    # 去掉最后一列corr
+    # Remove the last column corr
     data = data.iloc[:,:-1]
 
-    # 将NaN赋值为每个位点甲基化水平的均值
+    # Replace NaN with the mean of methylation level at each site
     print('Now is filling data')
     means = np.mean(data,axis=0)
     data.fillna(means, inplace=True)
@@ -79,11 +79,11 @@ for corr in corr_list:
 ## 1.2 Brain、Lung and Skin samples
 
 ```
-# 读取meta数据
+# # Set the working directory
 os.chdir('G:\\Methylation\\model\\')
 meta = pd.read_csv('meta_tissue.csv')
 
-# 只保留正常样本
+# Only keep normal samples
 # meta = meta.loc[meta['disease state' == 'Normal',:]]
 
 tissue_list = ['Brain','Lung','Skin']
@@ -94,16 +94,16 @@ for tissue in tissue_list:
     
     for i in range(len(files)):
     print(f"the {i}-th sample is {files[i]}")
-    # 读取数据文件
+    # read data
     data = pd.read_csv(f'../result_tissue/{files[i]}.txt',sep = '\t',header=None)
     data.columns = ['Chr','Start','End','methylation-level','methylated Cs','unmethylated Cs','Strand']
-    # 根据nreads筛选cpg
+    # Filter CpGs based on nreads
     data = data.loc[(data['methylated Cs']+data['unmethylated Cs'])>50,:]
-    # 计算甲基化水平
+    # Calculate mean methylation level
     data['methylation-level'] = data['methylation-level']/100
-    # 提取前四列
+    # Extract the first four columns
     data = data.iloc[:,[0,1,2,3]]
-    # 根据前三列对第四列求均值
+    # Calculate the average of the fourth column based on the first three columns
     data = data.groupby(['Chr','Start','End'])['methylation-level'].mean().reset_index()
     print(f'\tThe shape of {files[i]} is: {data.shape}')
 
@@ -111,42 +111,42 @@ for tissue in tissue_list:
         merge = data
     else:
         merge = pd.merge(merge, data, how='outer',on=['Chr','Start','End'],suffixes=(f'_x{i}',f'_y{i}'))
-        # 删除重复行
+        # Set column names
         # merge = merge.drop_duplicates()
-        # 删除含有NaN的行
+        # Delete rows containing NaN
         # merge.dropna(axis = 0,how = 'any',inplace=True)
         print(f'\t\tThe shape of merged data is: {merge.shape}')
         
-# 设置列名
+# Set column names
 merge.columns = ['Chr','Start','End']+files.tolist()
-# 删除NA值比例超过50%的行
+# Delete rows with NA value ratio exceeding 50%
 na_count = merge.isna().sum(axis = 1)
 na_ratio = na_count/(len(merge.columns)-3)
 merge = merge[na_ratio <= 0.6]
 print(f'**The shape of filtered merge is: {merge.shape}**')
-# 保存数据
+# Save data
 merge.to_csv(f'train_data4/merge_{tissue}_withchr.csv')
 merge = merge.iloc[:,3:]
 
-# 将merge data匹配age信息
+# Match merge data to age information
 merge_data = pd.merge(merge.T,meta[["SRA","age"]],left_index=True,right_on=["SRA"])
 merge_data = merge_data.set_index("SRA")
 merge_data.to_csv(f'train_data4/merge_{tissue}_withage.csv')
 
-# 检查是否有np.nan值
+# Check for np.nan values
 merge_check = merge.T.isnull()
 
-# 计算单个cpgsite与age的相关性
+# Calculate the correlation between single CpG site and age
 merge['corr'] = [np.corrcoef(merge_data.iloc[(~merge_check.iloc[:,i]).tolist(),i], merge_data.iloc[(~merge_check.iloc[:,i]).tolist(),-1])[0,1] for i in range(merge_data.shape[1]-1)]
 
 corr_list = [0.2,0.3,0.4]
 for corr in corr_list:
     data = merge[abs(merge['corr'])>corr]
     print(f'correlation threshold == {corr},the shape of data is:{data.shape}')
-    # 去掉最后一列corr
+    # Remove the last column corr
     data = data.iloc[:,:-1]
 
-    # 将NaN赋值为每个位点甲基化水平的均值
+    # Replace NaN with the mean of methylation level at each site
     print('Now is filling data')
     means = np.mean(data,axis=0)
     data.fillna(means, inplace=True)
@@ -161,7 +161,7 @@ for corr in corr_list:
 def bootstrap(bootstrap_df,n):
     bootstrap_coef = []
     for i in range(n):
-        #进行随机有放回抽样
+        # Perform random sampling with replacement
         bootstrap_samples = bootstrap_df.sample(len(bootstrap_df),replace = True)
         model = ElasticNet(alpha=best_alpha, l1_ratio=best_l1_ratio, random_state=2024)
         model.fit(bootstrap_samples.iloc[:,:-1],bootstrap_samples.iloc[:,-1])
@@ -178,17 +178,17 @@ for tissue in tissue_list:
         meta = df.loc[df['tissue'] == tissue,:]
     data = pd.read_csv(f'train_data4/merge_{tissue}_{corr}.csv',index_col=0)
     data = data.T
-    # 填充缺失值
+    # Fill missing values
     means = np.mean(data,axis=0)
     data.fillna(means, inplace=True)
 
-    # 利用10-fold交叉验证求出最优参数
+    # Find optimal parameters using 10-fold cross validation
     X = np.array(data)
     bootstrap_data = pd.merge(data,meta[["SRA","age"]],left_index=True,right_on=["SRA"])
     bootstrap_data = bootstrap_data.set_index("SRA")
     y = bootstrap_data['age']
     
-    # 定义参数搜索范围
+    # Define parameter search range
     alpha_range = [0.1,1,10,50]
     l1_ratio_range = np.arange(0, 1, 0.1)
 
@@ -197,37 +197,37 @@ for tissue in tissue_list:
     best_mean_mse = float('inf')
     # Best alpha: 0.1, Best l1_ratio: 0.4, Best mean MSE: 97.13731881603614
 
-    # 交叉验证选参数
+    # Cross validation parameter selection
     print('Now is running 10-fold cross validation')
     t1 = time.time()
     for alpha in alpha_range:
         for l1_ratio in l1_ratio_range:
-            # 定义 K 折交叉验证
+            # Define K-fold cross validation
             k_folds = KFold(n_splits=10, shuffle=True, random_state=2024)
 
-            # 存储每次交叉验证的均方误差
+            # Store the mean square error of each cross validation
             mean_mse_list = []
 
-            # 使用 K 折交叉验证训练模型并进行评估
+            # Train and evaluate the model using K-fold cross validation
             for train_index, test_index in k_folds.split(X):
                 X_train, X_test = X[train_index], X[test_index]
                 y_train, y_test = y[train_index], y[test_index]
 
-                # 创建并训练模型
+                # Create and train model
                 model = ElasticNet(alpha=alpha, l1_ratio=l1_ratio, random_state=2024)
                 model.fit(X_train, y_train)
 
-                # 在测试集上进行预测
+                # Predict on the test set
                 y_pred = model.predict(X_test)
 
-                # 计算均方误差
+                # Calculate mean square error
                 mse = mean_squared_error(y_test, y_pred)
                 mean_mse_list.append(mse)
 
-            # 计算交叉验证均方误差的平均值
+            # Calculate the average of cross validation mean square error
             mean_mse = np.mean(mean_mse_list)
 
-            # 更新最佳参数和最小均方误差
+            # Update the best parameters and minimum mean square error
             if mean_mse < best_mean_mse:
                 best_mean_mse = mean_mse
                 best_alpha = alpha
@@ -235,12 +235,12 @@ for tissue in tissue_list:
 
     #           print(f"alpha = {round(alpha, 2)}, l1_ratio = {round(l1_ratio, 3)}, mean MSE = {round(mean_mse, 3)}")
 
-    # 输出最佳参数
+    # Output the best parameters
     print(f"Best alpha: {best_alpha}, Best l1_ratio: {best_l1_ratio}, Best mean MSE: {best_mean_mse}")
     t2 = time.time()
     print(f'10-fold cross validation is complete,takes {str(t2-t1)}')
 
-    # bootsrtap得到500个模型，并得到弹性网回归的系数
+    # Get 500 models through bootsrtap and get coefficients of elastic net regression
     print('Now is bootstrap')
     t3 = time.time()
     coef = bootstrap(bootstrap_data,500)
@@ -248,14 +248,14 @@ for tissue in tissue_list:
     t4 = time.time()
     print(f'bootstrap is complete,takes {str(t4-t3)}')
 
-    # 删除在少于一半的模型（250）中选择的特征
+    # Delete features selected in less than half of the models (250)
     zero_percent = (coef == 0).sum(axis = 0) / 500
     columns_to_drop = zero_percent[zero_percent > 0.5].index
 
-    # 输出筛选后500个模型中重要特征的系数
+    # Output coefficients of important features in 500 models after screening
     coef_drop = coef.drop(columns_to_drop,axis = 1)
 
-    # 确定最后模型所要使用的数据
+    # Determine the data to be used in the final model
     model_data = bootstrap_data.drop(columns_to_drop ,axis=1)
     print(f'The shape of model_data of {tissue} is: {model_data.shape}')
     model_data.to_csv(f'train_data4/bootstrap_{tissue}_{corr}.csv') 
@@ -266,7 +266,7 @@ for tissue in tissue_list:
 ### 3.1 without disease features
 
 ```python
-# 定义参数搜索范围
+# Define parameter search range
 alpha_range = [0.1,1,10,50]
 l1_ratio_range = np.arange(0, 1, 0.05)
 
@@ -276,9 +276,9 @@ for tissue in tissue_list:
     model_data = pd.read_csv(f'train_data4/bootstrap_{tissue}_{corr}.csv',index_col=0)
 
     loo = LeaveOneOut()
-    # 存储预测的年龄
+    # Store predicted age
     age_pred_list = []
-    # 使用留一法分割数据集
+    # Split the dataset using the leave-one-out method
     print('Now is running LOOCV')
     t1 = time.time()
     for train,test in loo.split(model_data):
@@ -291,34 +291,34 @@ for tissue in tissue_list:
         best_l1_ratio = None
         best_mean_mse = float('inf')
 
-        # K 折交叉验证选择最优参数
+        # K-fold cross validation to select the optimal parameters
         for alpha in alpha_range:
             for l1_ratio in l1_ratio_range:
-                # 定义 K 折交叉验证
+                # Define K-fold cross validation
                 k_folds = KFold(n_splits=5, shuffle=True, random_state=2024)
 
-                # 存储每次交叉验证的均方误差
+                # Store the mean square error of each cross validation
                 mean_mse_list = []
-                # 使用 K 折交叉验证训练模型并进行评估
+                # Train and evaluate the model using K-fold cross validation
                 for train_index, test_index in k_folds.split(train_x):
                     X_train, X_test = train_x.iloc[train_index], train_x.iloc[test_index]
                     y_train, y_test = train_y.iloc[train_index], train_y.iloc[test_index]
 
-                    # 创建并训练模型
+                    # Create and train model
                     model = ElasticNet(alpha=alpha, l1_ratio=l1_ratio, random_state=2024)
                     model.fit(X_train, y_train)
 
-                    # 在测试集上进行预测
+                    # Predict on the test set
                     y_pred = model.predict(X_test)
 
-                    # 计算均方误差
+                    # Calculate mean square error
                     mse = mean_squared_error(y_test, y_pred)
                     mean_mse_list.append(mse)
 
-                # 计算交叉验证均方误差的平均值
+                # Calculate the average of cross validation mean square error
                 mean_mse = np.mean(mean_mse_list)
 
-                # 更新最佳参数和最小均方误差
+                # Update the best parameters and minimum mean square error
                 if mean_mse < best_mean_mse:
                     best_mean_mse = mean_mse
                     best_alpha = alpha
@@ -326,10 +326,10 @@ for tissue in tissue_list:
 
 #                     print(f"alpha = {round(alpha, 2)}, l1_ratio = {round(l1_ratio, 3)}, mean MSE = {round(mean_mse, 3)}")
 
-        # 输出最佳参数
+        # Output the best parameters
         print(f"Best alpha: {best_alpha}, Best l1_ratio: {best_l1_ratio}, Best mean MSE: {best_mean_mse}")
 
-        # 留一法预测年龄
+        # Leave-one-out method to predict age
     #     best_alpha = 0.1
     #     best_l1_ratio = 0.4
 
@@ -361,20 +361,20 @@ for tissue in tissue_list:
         meta = df.loc[df['tissue'] == tissue,:]
 
     model_data = pd.read_csv(f'train_data4/bootstrap_{tissue}_{corr}.csv',index_col=0)
-    # 根据meta将样本重排
+    # Rearrange samples according to meta data
     model_data = model_data.loc[meta['SRA']]
-    # 根据疾病信息增加列
+    # Add columns based on disease information
     for i in set(meta['disease state']):
         model_data[i] = (meta['disease state']==i).astype(int).tolist()
-    # 将age列调整为最后一列
+    # Adjust the age column to be the last column
     model_data = model_data[[col for col in model_data.columns if col != 'age'] + ['age']]
-    # 保存数据
+    # save data
     model_data.to_csv(f'train_data4/bootstrap_{tissue}_{corr}_add.csv') 
 ```
 
 ```
 # train model
-# 定义参数搜索范围
+# Define parameter search range
 alpha_range = [0.1,1,10,50]
 l1_ratio_range = np.arange(0, 1, 0.05)
 
@@ -384,9 +384,9 @@ for tissue in tissue_list:
     model_data = pd.read_csv(f'train_data4/bootstrap_{tissue}_{corr}_add.csv',index_col=0)
 
     loo = LeaveOneOut()
-    # 存储预测的年龄
+    # Store predicted age
     age_pred_list = []
-    # 使用留一法分割数据集
+    # Split the dataset using the leave-one-out method
     print('Now is running LOOCV')
     t1 = time.time()
     for train,test in loo.split(model_data):
@@ -399,34 +399,34 @@ for tissue in tissue_list:
         best_l1_ratio = None
         best_mean_mse = float('inf')
 
-        # K 折交叉验证选择最优参数
+        # K-fold cross validation to select the optimal parameters
         for alpha in alpha_range:
             for l1_ratio in l1_ratio_range:
-                # 定义 K 折交叉验证
+                # Define K-fold cross validation
                 k_folds = KFold(n_splits=5, shuffle=True, random_state=2024)
 
-                # 存储每次交叉验证的均方误差
+                # Store the mean square error of each cross validation
                 mean_mse_list = []
-                # 使用 K 折交叉验证训练模型并进行评估
+                # Train and evaluate the model using K-fold cross validation
                 for train_index, test_index in k_folds.split(train_x):
                     X_train, X_test = train_x.iloc[train_index], train_x.iloc[test_index]
                     y_train, y_test = train_y.iloc[train_index], train_y.iloc[test_index]
 
-                    # 创建并训练模型
+                    # Create and train model
                     model = ElasticNet(alpha=alpha, l1_ratio=l1_ratio, random_state=2024)
                     model.fit(X_train, y_train)
 
-                    # 在测试集上进行预测
+                    # Predict on the test set
                     y_pred = model.predict(X_test)
 
-                    # 计算均方误差
+                    # Calculate mean square error
                     mse = mean_squared_error(y_test, y_pred)
                     mean_mse_list.append(mse)
 
-                # 计算交叉验证均方误差的平均值
+                # Calculate the average of cross validation mean square error
                 mean_mse = np.mean(mean_mse_list)
 
-                # 更新最佳参数和最小均方误差
+                # Update the best parameters and minimum mean square error
                 if mean_mse < best_mean_mse:
                     best_mean_mse = mean_mse
                     best_alpha = alpha
@@ -434,10 +434,10 @@ for tissue in tissue_list:
 
 #                     print(f"alpha = {round(alpha, 2)}, l1_ratio = {round(l1_ratio, 3)}, mean MSE = {round(mean_mse, 3)}")
 
-        # 输出最佳参数
+        # Output the best parameters
         print(f"Best alpha: {best_alpha}, Best l1_ratio: {best_l1_ratio}, Best mean MSE: {best_mean_mse}")
 
-        # 留一法预测年龄
+        # Leave-one-out method to predict age
     #     best_alpha = 0.1
     #     best_l1_ratio = 0.4
 

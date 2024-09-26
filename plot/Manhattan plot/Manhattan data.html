@@ -15116,31 +15116,31 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="k">def</span> <span class="nf">calculate_correlations</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
-    <span class="c1"># 初始化结果列表</span>
+    <span class="c1"># Initialize the result</span>
     <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
 
-    <span class="c1"># 获取列数</span>
+    <span class="c1"># Get the number of columns</span>
     <span class="n">num_cols</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
     
-    <span class="c1"># 判断NA值</span>
+    <span class="c1"># Determine NA value</span>
     <span class="n">na_check</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span>
 
-    <span class="c1"># 对前 n-1 列与第 n 列计算相关性</span>
+    <span class="c1"># Calculate the correlation between the first n-1 columns and the n-th column</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_cols</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
-        <span class="c1"># 提取当前列和第 n 列</span>
+        <span class="c1"># Extract the current column and the n-th column</span>
         <span class="n">col1</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[(</span><span class="o">~</span><span class="n">na_check</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="n">i</span><span class="p">])</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span><span class="n">i</span><span class="p">]</span>
         <span class="n">col2</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[(</span><span class="o">~</span><span class="n">na_check</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="n">i</span><span class="p">])</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
-        <span class="c1"># 计算皮尔逊相关性及其 p 值</span>
+        <span class="c1"># Calculate Pearson correlation and its p value</span>
         <span class="n">pearson_corr</span><span class="p">,</span> <span class="n">pearson_p_value</span> <span class="o">=</span> <span class="n">pearsonr</span><span class="p">(</span><span class="n">col1</span><span class="p">,</span> <span class="n">col2</span><span class="p">)</span>
 
-        <span class="c1"># 计算斯皮尔曼相关性及其 p 值</span>
+        <span class="c1"># Calculate Spearson correlation and its p value</span>
         <span class="n">spearman_corr</span><span class="p">,</span> <span class="n">spearman_p_value</span> <span class="o">=</span> <span class="n">spearmanr</span><span class="p">(</span><span class="n">col1</span><span class="p">,</span> <span class="n">col2</span><span class="p">)</span>
 
-        <span class="c1"># 计算肯德尔相关性及其 p 值</span>
+        <span class="c1"># Calculate Kendall correlation and its p value</span>
         <span class="n">kendall_corr</span><span class="p">,</span> <span class="n">kendall_p_value</span> <span class="o">=</span> <span class="n">kendalltau</span><span class="p">(</span><span class="n">col1</span><span class="p">,</span> <span class="n">col2</span><span class="p">)</span>
 
-        <span class="c1"># 将结果添加到列表</span>
+        <span class="c1"># Add the results to the list</span>
         <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
             <span class="s1">&#39;Column&#39;</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
             <span class="s1">&#39;Pearson Correlation&#39;</span><span class="p">:</span> <span class="n">pearson_corr</span><span class="p">,</span>
@@ -15151,7 +15151,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
             <span class="s1">&#39;Kendall P-value&#39;</span><span class="p">:</span> <span class="n">kendall_p_value</span>
         <span class="p">})</span>
 
-    <span class="c1"># 转换结果为数据框</span>
+    <span class="c1"># Convert the results into a data frame</span>
     <span class="n">result_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">result_df</span>
 </pre></div>
@@ -15174,16 +15174,16 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
     <span class="nb">print</span><span class="p">(</span><span class="n">tissue</span><span class="p">)</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;../../train_data/bootstrap_</span><span class="si">{</span><span class="n">tissue</span><span class="si">}</span><span class="s1">_0.2_add.csv&#39;</span><span class="p">,</span><span class="n">index_col</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
 
-    <span class="c1"># 计算相关性并输出结果数据框</span>
+    <span class="c1"># Calculate the correlation and output the result</span>
     <span class="n">result_df</span> <span class="o">=</span> <span class="n">calculate_correlations</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
 
-    <span class="c1"># 读取染色体的位置信息</span>
+    <span class="c1"># Read the chromosome location information</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;../../train_data/merge_</span><span class="si">{</span><span class="n">tissue</span><span class="si">}</span><span class="s1">_withchr.csv&#39;</span><span class="p">,</span><span class="n">index_col</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
     <span class="n">data</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()]</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
     <span class="n">data</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span><span class="n">drop</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
 
-    <span class="c1"># 将Chr、Start、End和相关性以及P值concat到一起</span>
+    <span class="c1"># Concatenate Chr, Start, End, correlation and P value together</span>
     <span class="n">data_merge</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">],</span><span class="n">result_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:]],</span><span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
     <span class="n">data_merge</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Manhattan_data_</span><span class="si">{</span><span class="n">tissue</span><span class="si">}</span><span class="s1">_add.csv&#39;</span><span class="p">)</span>
 </pre></div>
