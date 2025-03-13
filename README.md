@@ -46,13 +46,13 @@ na_ratio = na_count/(len(merge.columns)-3)
 merge = merge[na_ratio <= 0.6]
 print(f'**The shape of filtered merge is: {merge.shape}**')
 # Save data
-merge.to_csv(f'train_data4/merge_{tissue}_withchr.csv')
+merge.to_csv(f'train_data/merge_{tissue}_withchr.csv')
 merge = merge.iloc[:,3:]
 
 # Match merge data to age information
 merge_data = pd.merge(merge.T,meta[["SRA","age"]],left_index=True,right_on=["SRA"])
 merge_data = merge_data.set_index("SRA")
-merge_data.to_csv(f'train_data4/merge_{tissue}_withage.csv')
+merge_data.to_csv(f'train_data/merge_{tissue}_withage.csv')
 
 # Check for np.nan values
 merge_check = merge.T.isnull()
@@ -73,7 +73,7 @@ for corr in corr_list:
     data.fillna(means, inplace=True)
     print('filling data is complete')
 
-    data.to_csv(f'train_data4/merge_{tissue}_{corr}.csv')
+    data.to_csv(f'train_data/merge_{tissue}_{corr}.csv')
 ```
 
 ## 1.2 Brain、Lung and Skin samples
@@ -125,13 +125,13 @@ na_ratio = na_count/(len(merge.columns)-3)
 merge = merge[na_ratio <= 0.6]
 print(f'**The shape of filtered merge is: {merge.shape}**')
 # Save data
-merge.to_csv(f'train_data4/merge_{tissue}_withchr.csv')
+merge.to_csv(f'train_data/merge_{tissue}_withchr.csv')
 merge = merge.iloc[:,3:]
 
 # Match merge data to age information
 merge_data = pd.merge(merge.T,meta[["SRA","age"]],left_index=True,right_on=["SRA"])
 merge_data = merge_data.set_index("SRA")
-merge_data.to_csv(f'train_data4/merge_{tissue}_withage.csv')
+merge_data.to_csv(f'train_data/merge_{tissue}_withage.csv')
 
 # Check for np.nan values
 merge_check = merge.T.isnull()
@@ -152,7 +152,7 @@ for corr in corr_list:
     data.fillna(means, inplace=True)
     print('filling data is complete')
 
-    data.to_csv(f'train_data4/merge_{tissue}_{corr}.csv')
+    data.to_csv(f'train_data/merge_{tissue}_{corr}.csv')
 ```
 
 ## 2. select feature
@@ -176,7 +176,7 @@ for tissue in tissue_list:
     else:
         df = pd.read_csv('meta_tissue.csv')
         meta = df.loc[df['tissue'] == tissue,:]
-    data = pd.read_csv(f'train_data4/merge_{tissue}_{corr}.csv',index_col=0)
+    data = pd.read_csv(f'train_data/merge_{tissue}_{corr}.csv',index_col=0)
     data = data.T
     # Fill missing values
     means = np.mean(data,axis=0)
@@ -258,7 +258,7 @@ for tissue in tissue_list:
     # Determine the data to be used in the final model
     model_data = bootstrap_data.drop(columns_to_drop ,axis=1)
     print(f'The shape of model_data of {tissue} is: {model_data.shape}')
-    model_data.to_csv(f'train_data4/bootstrap_{tissue}_{corr}.csv') 
+    model_data.to_csv(f'train_data/bootstrap_{tissue}_{corr}.csv') 
 ```
 
 ## 3. train model
@@ -273,7 +273,7 @@ l1_ratio_range = np.arange(0, 1, 0.05)
 corr = 0.2
 tissue_list = ['Blood','Brain','Lung','Skin']
 for tissue in tissue_list:
-    model_data = pd.read_csv(f'train_data4/bootstrap_{tissue}_{corr}.csv',index_col=0)
+    model_data = pd.read_csv(f'train_data/bootstrap_{tissue}_{corr}.csv',index_col=0)
 
     loo = LeaveOneOut()
     # Store predicted age
@@ -341,7 +341,7 @@ for tissue in tissue_list:
     t2 = time.time()
     print(f'LOOCV step takes {str(t2-t1)}')
     df = pd.DataFrame(age_pred_list)
-    df.to_csv(f'train_data4/age_{tissue}_{corr}.csv')
+    df.to_csv(f'train_data/age_{tissue}_{corr}.csv')
     model_corr = np.corrcoef(age_pred_list,model_data["age"])[0, 1]
     print(f'model_corr of {tissue} is:{model_corr}')
 ```
@@ -355,12 +355,12 @@ tissue_list = ['Blood','Brain','Lung','Skin']
 for tissue in tissue_list:
     print(tissue)
     if tissue == 'Blood':
-        meta = pd.read_csv('train_data4/meta.csv')
+        meta = pd.read_csv('train_data/meta.csv')
     else:
-        df = pd.read_csv('train_data4/meta_tissue.csv')
+        df = pd.read_csv('train_data/meta_tissue.csv')
         meta = df.loc[df['tissue'] == tissue,:]
 
-    model_data = pd.read_csv(f'train_data4/bootstrap_{tissue}_{corr}.csv',index_col=0)
+    model_data = pd.read_csv(f'train_data/bootstrap_{tissue}_{corr}.csv',index_col=0)
     # Rearrange samples according to meta data
     model_data = model_data.loc[meta['SRA']]
     # Add columns based on disease information
@@ -369,7 +369,7 @@ for tissue in tissue_list:
     # Adjust the age column to be the last column
     model_data = model_data[[col for col in model_data.columns if col != 'age'] + ['age']]
     # save data
-    model_data.to_csv(f'train_data4/bootstrap_{tissue}_{corr}_add.csv') 
+    model_data.to_csv(f'train_data/bootstrap_{tissue}_{corr}_add.csv') 
 ```
 
 ```
@@ -381,7 +381,7 @@ l1_ratio_range = np.arange(0, 1, 0.05)
 corr = 0.2
 tissue_list = ['Blood','Brain','Lung','Skin']
 for tissue in tissue_list:
-    model_data = pd.read_csv(f'train_data4/bootstrap_{tissue}_{corr}_add.csv',index_col=0)
+    model_data = pd.read_csv(f'train_data/bootstrap_{tissue}_{corr}_add.csv',index_col=0)
 
     loo = LeaveOneOut()
     # Store predicted age
@@ -449,8 +449,127 @@ for tissue in tissue_list:
     t2 = time.time()
     print(f'LOOCV step takes {str(t2-t1)}')
     df = pd.DataFrame(age_pred_list)
-    df.to_csv(f'train_data4/age_{tissue}_{corr}_add.csv')
+    df.to_csv(f'train_data/age_{tissue}_{corr}_add.csv')
     model_corr = np.corrcoef(age_pred_list,model_data["age"])[0, 1]
     print(f'model_corr of {tissue} is:{model_corr}')
+```
+
+## 4. save BS-clock model
+
+```
+import pickle
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import KFold
+from sklearn.linear_model import ElasticNet
+from sklearn.metrics import mean_squared_error
+from sklearn.model_selection import train_test_split, cross_val_score, LeaveOneOut
+import warnings
+import time
+import os
+warnings.filterwarnings("ignore")
+
+# Create a directory to store models if it doesn't exist
+os.makedirs('saved_models', exist_ok=True)
+
+# Define parameter search scope
+alpha_range = [0.1,1,10,50]
+l1_ratio_range = np.arange(0, 1, 0.05)
+
+corr = 0.2
+tissue = 'Blood'
+
+model_data = pd.read_csv(f'train_data/bootstrap_{tissue}_{corr}.csv',index_col=0)
+X = model_data.iloc[:,:-1]
+y = model_data.iloc[:,-1]
+
+# Find the optimal parameters through cross validation
+best_alpha = None
+best_l1_ratio = None
+best_mean_mse = float('inf')
+
+# 5-fold cross validation
+for alpha in alpha_range:
+    for l1_ratio in l1_ratio_range:
+        k_folds = KFold(n_splits=5, shuffle=True, random_state=2024)
+        mean_mse_list = []
+
+        for train_index, test_index in k_folds.split(X):
+            X_train, X_test = X.iloc[train_index], X.iloc[test_index]
+            y_train, y_test = y.iloc[train_index], y.iloc[test_index]
+
+            model = ElasticNet(alpha=alpha, l1_ratio=l1_ratio, random_state=2024)
+            model.fit(X_train, y_train)
+            y_pred = model.predict(X_test)
+            mse = mean_squared_error(y_test, y_pred)
+            mean_mse_list.append(mse)
+
+        mean_mse = np.mean(mean_mse_list)
+        if mean_mse < best_mean_mse:
+            best_mean_mse = mean_mse
+            best_alpha = alpha
+            best_l1_ratio = l1_ratio
+
+# Train the final model using the optimal parameters
+final_model = ElasticNet(alpha=best_alpha, l1_ratio=best_l1_ratio, random_state=2024)
+final_model.fit(X, y)
+
+# Save model and feature information
+model_info = {
+    'model': final_model,
+    'features': list(X.columns),
+    'parameters': {
+        'alpha': best_alpha,
+        'l1_ratio': best_l1_ratio
+    }
+}
+
+# Save model
+with open(f'saved_models/BS-clock_model.pkl', 'wb') as f:
+    pickle.dump(model_info, f)
+```
+
+## 5. run BS-clock model
+
+```
+# Defining the prediction function
+def predict_age(new_data, tissue='Blood', corr=0.2):
+    """
+    Predict age using the saved model
+    
+    Parameters:
+    new_data: pandas DataFrame, Contains the same features as the training data
+    tissue: tissue type
+    corr: Correlation coefficient threshold
+    
+    Returns: Predicted age
+    """
+    # load model
+    with open(f'saved_models/BS-clock_model.pkl', 'rb') as f:
+        model_info = pickle.load(f)
+    
+    # check features
+    required_features = model_info['features']
+    if not all(feature in new_data.columns for feature in required_features):
+        raise ValueError("The input data is missing required features!!!")
+    
+    # Rearrange the input data according to the feature order during training
+    X = new_data[required_features]
+    
+    # predict
+    return model_info['model'].predict(X)
+```
+
+Our BS-clock model is built based on **4527 CpG sites**. Before running your own data, you need to prepare methylation data for these sites. The site information can be found in the [Selected_CpG_cites_BS-clock.csv](saved_models/Selected_CpG_cites_BS-clock.csv) file in the **saved_models** folder. Next, organize your data with samples as rows and the 4527 CpG features as columns (we added an 'age' column at the end to facilitate calculating the correlation between predicted age and chronological age). Finally, use the **predict_age** function to make predictions.
+
+```
+# Reading Data
+data = pd.read_csv(f'saved_models/test.csv',index_col=0) 
+new_data = data.drop(columns = 'age',axis = 1, inplace = False)
+predicted_age = predict_age(new_data, tissue='Blood', corr=0.2)
+
+# Calculate the correlation between predicted age and chronological age
+model_corr = np.corrcoef(predicted_age,data["age"])[0, 1]
+print(f'model_corr is:{model_corr}')
 ```
 
